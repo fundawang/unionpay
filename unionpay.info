@@ -1,0 +1,6 @@
+name = Union Pay
+description = Provides union pay interface for drupal
+package = Payment
+core = 7.x
+
+version = 0.1.20121204
