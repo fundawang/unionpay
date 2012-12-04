@@ -21,6 +21,11 @@ function unionpay_menu() {
 		'page arguments' => array('unionpay_admin_form'),
 	);
 	$items['charge/unionpay'] = array(
+		'access callback' => 'unionpay_access',
+		'type' => MENU_CALLBACK,
+		'page callback' => 'unionpay_response',
+	);
+	$items['charge/unionpay/response'] = array(
 		'access callback' => 'unionpay_response_access',
 		'type' => MENU_CALLBACK,
 		'page callback' => 'unionpay_response',
@@ -71,3 +76,24 @@ function unionpay_admin_form_submit($form, $form_state) {
 	}
 }
 
+function unionpay_access() {
+	if($_SERVER['REQUEST_METHOD']!=='POST') {
+		return false;
+	}
+	return true;
+}
+
+function unionpay_response_access() {
+	if($_SERVER['REQUEST_METHOD']!=='POST') {
+		return false;
+	}
+	return true;
+}
+
+function unionpay_paymentgatewayinfo() {
+	return array(
+		'unionpay' => drupal_get_path('module', 'unionpay').'/unionpay.jpg',
+	);
+}
+
+?>
