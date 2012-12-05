@@ -4,6 +4,8 @@
  * This file is licensed under GPLv2+.
 */
 
+include_once(DRUPAL_ROOT . '/' . drupal_get_path('module', 'unionpay') . '/quickpay_service.php');
+
 /**
  * @file
  * Provides UnionPay interface for drupal.
@@ -37,7 +39,7 @@ function unionpay_menu() {
 	$items['charge/unionpay'] = array(
 		'access callback' => 'unionpay_access',
 		'type' => MENU_CALLBACK,
-		'page callback' => 'unionpay_response',
+		'page callback' => 'unionpay_submit_form',
 	);
 	$items['charge/unionpay/response'] = array(
 		'access callback' => 'unionpay_response_access',
@@ -108,6 +110,29 @@ function unionpay_paymentgatewayinfo() {
 	return array(
 		'unionpay' => drupal_get_path('module', 'unionpay').'/unionpay.jpg',
 	);
+}
+
+function unionpay_submit_form($form, $form_state) {
+	return;
+}
+
+function unionpay_submit_form_submit($form, $form_state) {
+
+	$param['transType']             = quickpay_conf::CONSUME;  //交易类型，CONSUME or PRE_AUTH
+
+	$param['orderAmount']           = $form_state['values']['amount']*100;        //交易金额
+	$param['orderNumber']           = $form_state['values']['orderno']; //订单号，必须唯一
+	$param['orderTime']             = date('YmdHis', $form_state['values']['ordertime']);   //交易时间, YYYYmmhhddHHMMSS
+	$param['orderCurrency']         = quickpay_conf::CURRENCY_CNY;  //交易币种，CURRENCY_CNY=>人民币
+
+	$param['customerIp']            = $_SERVER['REMOTE_ADDR'];  //用户IP
+	$param['frontEndUrl']           = $GLOBALS['base_url'].'/charge/unionpay/response';    //前台回调URL
+	$param['backEndUrl']            = $GLOBALS['base_url'].'/charge/unionpay/response';    //后台回调URL
+	
+	$pay_service = new quickpay_service($param, quickpay_conf::FRONT_PAY);
+	$html = $pay_service->create_html();
+	
+	return $html;
 }
 
 ?>
