@@ -8,7 +8,8 @@
  *
  */
 
-require_once(dirname(__FILE__) . '/quickpay_conf.php');
+//require_once(dirname(__FILE__) . '/quickpay_conf.php');
+include_once(DRUPAL_ROOT . '/' . drupal_get_path('module', 'unionpay') . '/quickpay_conf.php');
 
 if (function_exists("date_default_timezone_set")) {
     date_default_timezone_set(quickpay_conf::$timezone);
@@ -277,7 +278,6 @@ eot;
             $html .= "    <input type=\"hidden\" name=\"{$key}\" id=\"{$key}\" value=\"{$value}\" />\n";
         }
         $html .= <<<eot
-    <input type="submit" type="hidden">
     </form>
 </body>
 </html>
