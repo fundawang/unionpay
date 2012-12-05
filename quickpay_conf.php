@@ -16,16 +16,16 @@ class quickpay_conf
     static $timezone        = "Asia/Shanghai"; //时区
     static $sign_method     = "md5"; //摘要算法，目前仅支持md5 (2011-08-22)
 
-    static $security_key    = variable_get('unionpay_security_key', '88888888'); //商户密钥
+    static $security_key    = "88888888"; //商户密钥
 
     //支付请求预定义字段
     static $pay_params  = array(
         'version'       => '1.0.0',
         'charset'       => 'UTF-8', //UTF-8, GBK等
-        'merId'         => variable_get('unionpay_merid','105550149170027'), //商户填写
-        'acqCode'       => variable_get('unionpay_acqcode',''),  //收单机构填写
-        'merCode'       => variable_get('unionpay_mercode',''),  //收单机构填写
-        'merAbbr'       => variable_get('unionpay_merabbr','商户名称'),
+        'merId'         => '105550149170027', //商户填写
+        'acqCode'       => '',  //收单机构填写
+        'merCode'       => '',  //收单机构填写
+        'merAbbr'       => '商户名称',
     );
 
     //* 测试环境
