@@ -18,6 +18,7 @@ function unionpay_help($path, $arg) {
 	switch ($path) {
 		case 'charge/unionpay':
 			$output = '<b>'.t('FAQ on Unionpay').'</b><br/>';
+			$output.= t('The preferred payment method is Certificate Payment. If your card is not support via Certificate Payment, plese try Online Banking Payment.').'<br/>';
 			$output.= t('Any questions, you may call 95516. Or, click <a href="@url" target="_blank">here</a>.',array('@url'=>'http://online.unionpay.com/static/help/index.html'));
 			break;
 		default: return;
