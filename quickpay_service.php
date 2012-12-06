@@ -255,7 +255,7 @@ class quickpay_service
                 }
                 $sign_str .= sprintf("%s=%s&", $key, $val);
             }
-            return md5($sign_str . md5(quickpay_conf::$security_key));
+            return md5($sign_str . md5(variable_get('unionpay_security_key', quickpay_conf::$security_key)));
         }
         /* TODO: elseif (strtolower($sign_method) == "rsa")  */
         else {

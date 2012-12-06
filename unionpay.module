@@ -55,34 +55,37 @@ function unionpay_menu() {
 }
 
 function unionpay_admin_form($form, $form_state) {
+	$form=array(
+		'#submit' => array('unionpay_admin_form_submit'),
+	);
 	$form['security_key'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Security Key (@code)',array('@code'=>'security_key')),
-		'#default_value' => variable_get('unionpay_security_key', ''),
+		'#default_value' => variable_get('unionpay_security_key', quickpay_conf::$security_key),
 		'#required' => TRUE,
 	);
 	$form['merid'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Merchant ID (@code)',array('@code'=>'merId')),
-		'#default_value' => variable_get('unionpay_merid', ''),
+		'#default_value' => variable_get('unionpay_merid', quickpay_conf::$pay_params['merId']),
 		'#required' => TRUE,
 	);
 	$form['acqcode'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Acquirer BIN (@code)',array('@code'=>'acqCode')),
-		'#default_value' => variable_get('unionpay_acqcode', ''),
-		'#required' => TRUE,
+		'#default_value' => variable_get('unionpay_acqcode', quickpay_conf::$pay_params['acqCode']),
+		'#required' => FALSE,
 	);
 	$form['mercode'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Merchat Code (@code)',array('@code'=>'merCode')),
-		'#default_value' => variable_get('unionpay_mercode', ''),
-		'#required' => TRUE,
+		'#default_value' => variable_get('unionpay_mercode', quickpay_conf::$pay_params['merCode']),
+		'#required' => FALSE,
 	);
 	$form['merabbr'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Merchant Name (@code)',array('@code'=>'merAbbr')),
-		'#default_value' => variable_get('unionpay_merabbr', ''),
+		'#default_value' => variable_get('unionpay_merabbr', quickpay_conf::$pay_params['merAbbr']),
 		'#required' => TRUE,
 	);
 	return system_settings_form($form);
@@ -132,6 +135,12 @@ function unionpay_submit_form($form, $form_state) {
 }
 
 function unionpay_submit_form_submit($form, $form_state) {
+	$param=array();
+
+	$param['merId']                 = variable_get('unionpay_merid', quickpay_conf::$pay_params['merId']);  // 商户ID
+	$param['acqCode']               = variable_get('unionpay_acqcode', quickpay_conf::$pay_params['acqCode']);  //收单机构代码
+	$param['merCode']               = variable_get('unionpay_mercode', quickpay_conf::$pay_params['merCode']);  //商户代码
+	$param['merAbbr']               = variable_get('unionpay_merabbr', quickpay_conf::$pay_params['merAbbr']);  //商户名称
 
 	$param['transType']             = quickpay_conf::CONSUME;  //交易类型，CONSUME or PRE_AUTH
 
