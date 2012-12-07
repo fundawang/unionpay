@@ -139,22 +139,22 @@ function unionpay_submit_form($form, $form_state) {
 function unionpay_submit_form_submit($form, $form_state) {
 	$param=array();
 
-	$param['merId']                 = variable_get('unionpay_merid', quickpay_conf::$pay_params['merId']);  // ÉÌ»§ID
-	$param['acqCode']               = variable_get('unionpay_acqcode', quickpay_conf::$pay_params['acqCode']);  //ÊÕµ¥»ú¹¹´úÂë
-	$param['merCode']               = variable_get('unionpay_mercode', quickpay_conf::$pay_params['merCode']);  //ÉÌ»§´úÂë
-	$param['merAbbr']               = variable_get('unionpay_merabbr', quickpay_conf::$pay_params['merAbbr']);  //ÉÌ»§Ãû³Æ
+	$param['merId']                 = variable_get('unionpay_merid', quickpay_conf::$pay_params['merId']);  // å•†æˆ·ID
+	$param['acqCode']               = variable_get('unionpay_acqcode', quickpay_conf::$pay_params['acqCode']);  //æ”¶å•æœºæž„ä»£ç 
+	$param['merCode']               = variable_get('unionpay_mercode', quickpay_conf::$pay_params['merCode']);  //å•†æˆ·ä»£ç 
+	$param['merAbbr']               = variable_get('unionpay_merabbr', quickpay_conf::$pay_params['merAbbr']);  //å•†æˆ·åç§°
 
-	$param['transType']             = quickpay_conf::CONSUME;  //½»Ò×ÀàÐÍ£¬CONSUME or PRE_AUTH
+	$param['transType']             = quickpay_conf::CONSUME;  //äº¤æ˜“ç±»åž‹ï¼ŒCONSUME or PRE_AUTH
 
-	$param['orderAmount']           = $form_state['values']['amount']*100;        //½»Ò×½ð¶î
-	$param['orderNumber']           = $form_state['values']['orderno']; //¶©µ¥ºÅ£¬±ØÐëÎ¨Ò»
-	$param['commodityName']         = $form_state['values']['ordertitle']; //¶©µ¥ºÅ£¬±ØÐëÎ¨Ò»
-	$param['orderTime']             = date('YmdHis', $form_state['values']['ordertime']);   //½»Ò×Ê±¼ä, YYYYmmhhddHHMMSS
-	$param['orderCurrency']         = quickpay_conf::CURRENCY_CNY;  //½»Ò×±ÒÖÖ£¬CURRENCY_CNY=>ÈËÃñ±Ò
+	$param['orderAmount']           = $form_state['values']['amount']*100;        //äº¤æ˜“é‡‘é¢
+	$param['orderNumber']           = $form_state['values']['orderno']; //è®¢å•å·ï¼Œå¿…é¡»å”¯ä¸€
+	$param['commodityName']         = $form_state['values']['ordertitle']; //è®¢å•å·ï¼Œå¿…é¡»å”¯ä¸€
+	$param['orderTime']             = date('YmdHis', $form_state['values']['ordertime']);   //äº¤æ˜“æ—¶é—´, YYYYmmhhddHHMMSS
+	$param['orderCurrency']         = quickpay_conf::CURRENCY_CNY;  //äº¤æ˜“å¸ç§ï¼ŒCURRENCY_CNY=>äººæ°‘å¸
 
-	$param['customerIp']            = $_SERVER['REMOTE_ADDR'];  //ÓÃ»§IP
-	$param['frontEndUrl']           = $GLOBALS['base_url'].'/charge/unionpay/response';    //Ç°Ì¨»Øµ÷URL
-	$param['backEndUrl']            = $GLOBALS['base_url'].'/charge/unionpay/response_back';    //ºóÌ¨»Øµ÷URL
+	$param['customerIp']            = $_SERVER['REMOTE_ADDR'];  //ç”¨æˆ·IP
+	$param['frontEndUrl']           = $GLOBALS['base_url'].'/charge/unionpay/response';    //å‰å°å›žè°ƒURL
+	$param['backEndUrl']            = $GLOBALS['base_url'].'/charge/unionpay/response_back';    //åŽå°å›žè°ƒURL
 	
 	$pay_service = new quickpay_service($param, quickpay_conf::FRONT_PAY);
 	$html = $pay_service->create_html();
@@ -166,4 +166,33 @@ function unionpay_response() {
 	module_invoke_all('gatewayreponse',$_POST['orderNumber'], $_POST['qid'], 'unionpay', arg(2)=='response_back');
 }
 
+function unionpay_querystatus($orderno, $ordertime) {
+	$param['transType']     = quickpay_conf::CONSUME;   //äº¤æ˜“ç±»åž‹
+	$param['orderNumber']   = $orderno; //è®¢å•å·
+	$param['orderTime']     = date('YmdHis', $ordertime);   //è®¢å•æ—¶é—´
+
+	//æäº¤æŸ¥è¯¢
+	$query  = new quickpay_service($param, quickpay_conf::QUERY);
+	//var_dump($query); exit;
+	$ret    = $query->post();
+
+	//è¿”å›žæŸ¥è¯¢ç»“æžœ
+	$response = new quickpay_service($ret, quickpay_conf::RESPONSE);
+	
+	//åŽç»­å¤„ç†
+	$arr_ret = $response->get_args();
+
+	$respCode = $response->get('respCode');
+	$queryResult = $response->get('queryResult');
+	
+	switch($queryResult) {
+		case quickpay_service::QUERY_FAIL:
+		case quickpay_service::QUERY_INVALID:
+			return FALSE;
+		case quickpay_service::RESP_SUCCESS:
+			if($queryResult == quickpay_service::QUERY_WAIT) return FALSE;
+			if($queryResult == quickpay_service::QUERY_SUCCESS) return $response->get('traceNumber');
+	}
+	return FALSE;
+}
 ?>
