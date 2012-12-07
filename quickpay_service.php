@@ -69,17 +69,19 @@ class quickpay_service
                 $this->api_url = quickpay_conf::$query_url;
                 $args['version']    = quickpay_conf::$pay_params['version'];
                 $args['charset']    = quickpay_conf::$pay_params['charset'];
-                $args['merId']      = quickpay_conf::$pay_params['merId'];
+                $args['merId']      = variable_get('unionpay_merid', quickpay_conf::$pay_params['merId']);
+                $args['acqCode']      = variable_get('unionpay_acqcode', quickpay_conf::$pay_params['acqCode']);
+                $args['merCode']      = variable_get('unionpay_mercode', quickpay_conf::$pay_params['merCode']);
 
-                if (empty(quickpay_conf::$pay_params['merId']) &&
-                    empty(quickpay_conf::$pay_params['acqCode']))
+                if (empty($args['merId']) &&
+                    empty($args['acqCode']))
                 {
                     throw new Exception('merId and acqCode can\'t be both empty');
                 }
 
                 //acqCode在QUERY请求中作为保留域存在
-                if (!empty(quickpay_conf::$pay_params['acqCode'])) {
-                    $acqCode = quickpay_conf::$pay_params['acqCode'];
+                if (!empty($args['acqCode'])) {
+                    $acqCode = quickpay_conf::$args['acqCode'];
                     $args['merReserved'] = "{acqCode=$acqCode}";
                 }
                 else {
