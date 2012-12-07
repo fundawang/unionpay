@@ -173,7 +173,6 @@ function unionpay_querystatus($orderno, $ordertime) {
 
 	//提交查询
 	$query  = new quickpay_service($param, quickpay_conf::QUERY);
-	//var_dump($query); exit;
 	$ret    = $query->post();
 
 	//返回查询结果
@@ -191,7 +190,7 @@ function unionpay_querystatus($orderno, $ordertime) {
 			return FALSE;
 		case quickpay_service::RESP_SUCCESS:
 			if($queryResult == quickpay_service::QUERY_WAIT) return FALSE;
-			if($queryResult == quickpay_service::QUERY_SUCCESS) return $response->get('traceNumber');
+			if($queryResult == quickpay_service::QUERY_SUCCESS) return $response->get('qid');
 	}
 	return FALSE;
 }

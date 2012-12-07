@@ -71,7 +71,6 @@ class quickpay_service
                 $args['charset']    = quickpay_conf::$pay_params['charset'];
                 $args['merId']      = variable_get('unionpay_merid', quickpay_conf::$pay_params['merId']);
                 $args['acqCode']      = variable_get('unionpay_acqcode', quickpay_conf::$pay_params['acqCode']);
-                $args['merCode']      = variable_get('unionpay_mercode', quickpay_conf::$pay_params['merCode']);
 
                 if (empty($args['merId']) &&
                     empty($args['acqCode']))
@@ -87,6 +86,7 @@ class quickpay_service
                 else {
                     $args['merReserved'] = '';
                 }
+                unset($args['acqCode']);
 
                 $this->args = $args;
                 $param_check = quickpay_conf::$query_params_check;
