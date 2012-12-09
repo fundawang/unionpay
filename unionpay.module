@@ -167,11 +167,12 @@ function unionpay_response() {
 }
 
 function unionpay_querystatus($orderno, $ordertime) {
+	$param=array();
 	$param['transType']     = quickpay_conf::CONSUME;   //交易类型
 	$param['orderNumber']   = $orderno; //订单号
 	$param['orderTime']     = date('YmdHis', $ordertime);   //订单时间
 	$param['merId']         = variable_get('unionpay_merid', quickpay_conf::$pay_params['merId']);
-	$args['acqCode']        = variable_get('unionpay_acqcode', quickpay_conf::$pay_params['acqCode']);
+	$param['acqCode']       = variable_get('unionpay_acqcode', quickpay_conf::$pay_params['acqCode']);
 
 	//提交查询
 	$query  = new quickpay_service($param, quickpay_conf::QUERY);
