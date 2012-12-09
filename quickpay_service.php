@@ -69,8 +69,6 @@ class quickpay_service
                 $this->api_url = quickpay_conf::$query_url;
                 $args['version']    = quickpay_conf::$pay_params['version'];
                 $args['charset']    = quickpay_conf::$pay_params['charset'];
-                $args['merId']      = variable_get('unionpay_merid', quickpay_conf::$pay_params['merId']);
-                $args['acqCode']      = variable_get('unionpay_acqcode', quickpay_conf::$pay_params['acqCode']);
 
                 if (empty($args['merId']) &&
                     empty($args['acqCode']))
