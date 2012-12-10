@@ -125,14 +125,26 @@ function unionpay_response_access() {
 	if($_SERVER['REQUEST_METHOD']!=='POST') {
 		return false;
 	}
-	$response = new quickpay_service($_POST, quickpay_conf::RESPONSE);
+	try {
+		$response = new quickpay_service($_POST, quickpay_conf::RESPONSE);
+	} catch(Exception $exp) {
+		watchdog('unionpay',
+			'Critical error occured: @returnstr.', array(
+				'@returnstr' => $exp->getMessage(),
+			),
+			WATCHDOG_CRITICAL
+		);
+		return FALSE;
+	}
+	
 	if ($response->get('respCode') != quickpay_service::RESP_SUCCESS) {
 		watchdog('unionpay',
 			'Got Error @errcode => @errstr when receiving post result.', array(
 				'@errcode' => $response->get('respCode'),
-				'@errstr' => $response->get('respMsg'),
+				'@errstr' => $response->get('respMsg')
+			),
 			WATCHDOG_ERROR
-		));
+		);
 	}
 	unset($response);
 	return true;
@@ -191,7 +203,18 @@ function unionpay_querystatus($orderno, $ordertime) {
 	$ret    = $query->post();
 
 	//返回查询结果
-	$response = new quickpay_service($ret, quickpay_conf::RESPONSE);
+	try {
+		$response = new quickpay_service($ret, quickpay_conf::RESPONSE);
+	} catch(Exception $exp) {
+		drupal_set_message(t('Critical error occured: @returnstr.',array('@returnstr'=>$exp->getMessage())), 'error');
+		watchdog('unionpay',
+			'Critical error occured: @returnstr.', array(
+				'@returnstr' => $exp->getMessage(),
+			),
+			WATCHDOG_CRITICAL
+		);
+		return FALSE;
+	}
 	
 	//后续处理
 	$arr_ret = $response->get_args();
