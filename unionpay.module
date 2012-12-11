@@ -187,7 +187,14 @@ function unionpay_submit_form_submit($form, $form_state) {
 }
 
 function unionpay_response() {
-	module_invoke_all('gatewayreponse',$_POST['orderNumber'], $_POST['qid'], 'unionpay', arg(2)=='response_back');
+	module_invoke_all('gatewayreponse',array(
+		'unionpay' => array(
+			'ordernum' => $_POST['orderNumber'],
+			'transactionno' => $_POST['qid'],
+			'settledate' => $_POST['settleDate'],
+			'is_backend' => arg(2)=='response_back',
+		),
+	));
 }
 
 function unionpay_querystatus($orderno, $ordertime) {
@@ -228,7 +235,14 @@ function unionpay_querystatus($orderno, $ordertime) {
 			return FALSE;
 		case quickpay_service::RESP_SUCCESS:
 			if($queryResult == quickpay_service::QUERY_WAIT) return FALSE;
-			if($queryResult == quickpay_service::QUERY_SUCCESS) return $response->get('qid');
+			if($queryResult == quickpay_service::QUERY_SUCCESS) return array(
+				'unionpay' => array(
+					'ordernum' => $orderno,
+					'transactionno' => $response->get('qid'),
+					'settledate' => $response->get('settleDate'),
+					'is_backend' => FALSE,
+				),
+			);
 	}
 	return FALSE;
 }
