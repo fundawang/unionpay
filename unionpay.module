@@ -105,6 +105,29 @@ function unionpay_admin_form($form, $form_state) {
 	return system_settings_form($form);
 }
 
+function unionpay_admin_form_validate($form, $form_state) {
+	$orig_security_key=variable_get('unionpay_security_key', quickpay_conf::$security_key);
+	variable_set('unionpay_security_key',$form_state['values']['security_key']);
+	
+	$param=array();
+	$param['transType']     = quickpay_conf::CONSUME;   //交易类型
+	$param['orderNumber']   = date('YmdHis'); //订单号
+	$param['orderTime']     = date('YmdHis');   //订单时间
+	$param['merId']         = $form_state['values']['merid'];
+	$param['acqCode']       = $form_state['values']['acqcode'];
+
+	//提交查询
+	$query  = new quickpay_service($param, quickpay_conf::QUERY);
+	$ret    = $query->post();
+	try {
+		$response = new quickpay_service($ret, quickpay_conf::RESPONSE);
+	} catch(Exception $exp) {
+		form_set_error('security_key', t('It seems that security key and merId does not match.'));
+		form_set_error('merid');
+	}
+	variable_set('unionpay_security_key',$orig_security_key);
+}
+
 function unionpay_admin_form_submit($form, $form_state) {
 	$settings=array(
 		'security_key', 'merid', 'acqcode', 'mercode', 'merabbr'
