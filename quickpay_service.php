@@ -78,7 +78,7 @@ class quickpay_service
 
                 //acqCode在QUERY请求中作为保留域存在
                 if (!empty($args['acqCode'])) {
-                    $acqCode = quickpay_conf::$args['acqCode'];
+                    $acqCode = $args['acqCode'];
                     $args['merReserved'] = "{acqCode=$acqCode}";
                 }
                 else {

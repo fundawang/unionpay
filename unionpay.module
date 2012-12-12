@@ -124,6 +124,7 @@ function unionpay_admin_form_validate($form, $form_state) {
 	} catch(Exception $exp) {
 		form_set_error('security_key', t('It seems that security key and merId does not match.'));
 		form_set_error('merid');
+		form_set_error('acqcode');
 	}
 	variable_set('unionpay_security_key',$orig_security_key);
 }
