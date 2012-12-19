@@ -66,6 +66,7 @@ function unionpay_admin_form($form, $form_state) {
 		'#default_value' => variable_get('unionpay_security_key', quickpay_conf::$security_key),
 		'#required' => TRUE,
 		'#size' => 37,
+		'#maxlength' => 26,
 		'#attached' => array(
 			'js' => array(drupal_get_path('module', 'unionpay').'/unionpay.js'),
 		),
@@ -73,7 +74,7 @@ function unionpay_admin_form($form, $form_state) {
 	drupal_add_js(
 		'jQuery(document).ready(function(){'.
 			'jQuery(\'#edit-security-key\').after(\''.
-				'<input type="button" onclick="javascript:jQuery(\\\'#edit-security-key\\\').val(password(20));" value="'.t('Gen 20-digits random string').'"/>'.
+				'<input type="button" onclick="javascript:jQuery(\\\'#edit-security-key\\\').val(password(26));" value="'.t('Gen 26-digits random security key').'"/>'.
 				'\')'.
 			'});',
 		'inline'
@@ -176,7 +177,11 @@ function unionpay_response_access() {
 
 function unionpay_paymentgatewayinfo() {
 	return array(
-		'unionpay' => drupal_get_path('module', 'unionpay').'/unionpay.jpg',
+		'unionpay' => array(
+			'url' => 'http://online.unionpay.com',
+			'front'  => drupal_get_path('module', 'unionpay').'/unionpay-merchant.png',
+			'payment' => drupal_get_path('module', 'unionpay').'/unionpay.png',
+		),
 	);
 }
 
