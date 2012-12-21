@@ -65,7 +65,7 @@ function unionpay_admin_form($form, $form_state) {
 		'#title' => t('Security Key (@code)',array('@code'=>'security_key')),
 		'#default_value' => variable_get('unionpay_security_key', quickpay_conf::$security_key),
 		'#required' => TRUE,
-		'#size' => 37,
+		'#size' => 35,
 		'#maxlength' => 26,
 		'#attached' => array(
 			'js' => array(drupal_get_path('module', 'unionpay').'/unionpay.js'),
@@ -83,18 +83,21 @@ function unionpay_admin_form($form, $form_state) {
 		'#type' => 'textfield',
 		'#title' => t('Merchant ID (@code)',array('@code'=>'merId')),
 		'#default_value' => variable_get('unionpay_merid', quickpay_conf::$pay_params['merId']),
+		'#maxlength' => 15,
 		'#required' => TRUE,
 	);
 	$form['acqcode'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Acquirer BIN (@code)',array('@code'=>'acqCode')),
 		'#default_value' => variable_get('unionpay_acqcode', quickpay_conf::$pay_params['acqCode']),
+		'#maxlength' => 8,
 		'#required' => FALSE,
 	);
 	$form['mercode'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Merchat Code (@code)',array('@code'=>'merCode')),
 		'#default_value' => variable_get('unionpay_mercode', quickpay_conf::$pay_params['merCode']),
+		'#maxlength' => 4,
 		'#required' => FALSE,
 	);
 	$form['merabbr'] = array(
