@@ -112,22 +112,24 @@ function unionpay_admin_form($form, $form_state) {
 function unionpay_admin_form_validate($form, $form_state) {
 	$orig_security_key=variable_get('unionpay_security_key', quickpay_conf::$security_key);
 	
+	$should_return=FALSE;
 	if(preg_match('@^[0-9]{6,26}$@', $form_state['values']['security_key']) !== 1) {
 		form_set_error('security_key', t('The @field you have entered is not valid.',array('@field' => t('Security Key (@code)',array('@code'=>'security_key')))));
-		return;
+		$should_return=TRUE;
 	}
 	if(preg_match('@^[0-9]{15}$@', $form_state['values']['merid']) !== 1) {
 		form_set_error('merid', t('The @field you have entered is not valid.',array('@field' => t('Merchant ID (@code)',array('@code'=>'merId')))));
-		return;
+		$should_return=TRUE;
 	}
 	if(!empty($form_state['values']['acqcode']) && preg_match('@^[0-9]{8}$@', $form_state['values']['acqcode']) !== 1) {
 		form_set_error('acqcode', t('The @field you have entered is not valid.',array('@field' => t('Acquirer BIN (@code)',array('@code'=>'acqCode')))));
-		return;
+		$should_return=TRUE;
 	}
 	if(!empty($form_state['values']['mercode']) && preg_match('@^[0-9]{4}$@', $form_state['values']['mercode']) !== 1) {
 		form_set_error('mercode', t('The @field you have entered is not valid.',array('@field' => t('Merchat Code (@code)',array('@code'=>'merCode')))));
-		return;
+		$should_return=TRUE;
 	}
+	if($should_return) return;
 	
 	variable_set('unionpay_security_key',$form_state['values']['security_key']);
 	$param=array();
