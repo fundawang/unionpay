@@ -35,9 +35,9 @@ class quickpay_conf
     //*/
 
     /* 预上线环境
-    static $front_pay_url   = "https://www.epay.lxdns.com/UpopWeb/api/Pay.action";
-    static $back_pay_url    = "https://www.epay.lxdns.com/UpopWeb/api/BSPay.action";
-    static $query_url       = "https://www.epay.lxdns.com/UpopWeb/api/Query.action";
+    static $front_pay_url   = "http://www.epay.lxdns.com/UpopWeb/api/Pay.action";
+    static $back_pay_url    = "http://www.epay.lxdns.com/UpopWeb/api/BSPay.action";
+    static $query_url       = "http://www.epay.lxdns.com/UpopWeb/api/Query.action";
     //*/
 
     /* 线上环境
