@@ -343,6 +343,7 @@ eot;
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_HEADER, false);
             curl_setopt($curl, CURLOPT_TIMEOUT, 60); //seconds
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, quickpay_conf::VERIFY_HTTPS_CERT);
 
             if (is_array($options)) { 
                 foreach($options as $key => $value) {
