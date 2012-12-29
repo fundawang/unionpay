@@ -227,6 +227,7 @@ function unionpay_response() {
 	module_invoke_all('gatewayreponse',array(
 		'unionpay' => array(
 			'orderno' => $_POST['orderNumber'],
+			'amount' => $_POST['settleAmount']/100,
 			'transactionno' => $_POST['qid'],
 			'settledate' => $_POST['settleDate'],
 			'is_backend' => arg(2)=='response_back',
@@ -274,6 +275,7 @@ function unionpay_querystatus($orderno, $ordertime) {
 			if($queryResult == quickpay_service::QUERY_SUCCESS) return array(
 				'unionpay' => array(
 					'orderno' => $orderno,
+					'amount' => $response->get('settleAmount')/100,
 					'transactionno' => $response->get('qid'),
 					'settledate' => $response->get('settleDate'),
 					'is_backend' => FALSE,
