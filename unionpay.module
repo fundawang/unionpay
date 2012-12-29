@@ -56,6 +56,18 @@ function unionpay_menu() {
 	return $items;
 }
 
+/**
+ * Implementation of hook_uninstall().
+ */
+function unionpay_uninstall() {
+	$settings=array(
+		'security_key', 'merid', 'merabbr'
+	);
+	foreach($settings as $s) {
+		variable_del('unionpay_'.$s);
+	}
+}
+
 function unionpay_admin_form($form, $form_state) {
 	$form=array(
 		'#submit' => array('unionpay_admin_form_submit'),
