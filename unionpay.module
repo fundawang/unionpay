@@ -78,7 +78,7 @@ function unionpay_admin_form($form, $form_state) {
 		'#default_value' => variable_get('unionpay_security_key', quickpay_conf::$security_key),
 		'#required' => TRUE,
 		'#size' => 35,
-		'#maxlength' => 26,
+		'#maxlength' => 32,
 		'#attached' => array(
 			'js' => array(drupal_get_path('module', 'unionpay').'/unionpay.js'),
 		),
@@ -111,7 +111,7 @@ function unionpay_admin_form_validate($form, $form_state) {
 	$orig_security_key=variable_get('unionpay_security_key', quickpay_conf::$security_key);
 	
 	$should_return=FALSE;
-	if(preg_match('@^[0-9a-zA-Z]{6,26}$@', $form_state['values']['security_key']) !== 1) {
+	if(preg_match('@^[0-9a-zA-Z]{6,32}$@', $form_state['values']['security_key']) !== 1) {
 		form_set_error('security_key', t('The @field you have entered is not valid.',array('@field' => t('Security Key (@code)',array('@code'=>'security_key')))));
 		$should_return=TRUE;
 	}
