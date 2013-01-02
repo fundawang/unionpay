@@ -269,11 +269,13 @@ function unionpay_querystatus($orderno, $ordertime) {
 	
 	switch($queryResult) {
 		case quickpay_service::QUERY_FAIL:
+			return onlinecharge_PAYMENT_FAILED;
 		case quickpay_service::QUERY_INVALID:
-			return FALSE;
-		case quickpay_service::RESP_SUCCESS:
-			if($queryResult == quickpay_service::QUERY_WAIT) return FALSE;
-			if($queryResult == quickpay_service::QUERY_SUCCESS) return array(
+			return onlinecharge_PAYMENT_INVALID;
+		case quickpay_service::QUERY_WAIT:
+			return onlinecharge_PAYMENT_PROCESSING;
+		case quickpay_service::QUERY_SUCCESS:
+			return array(
 				'unionpay' => array(
 					'orderno' => $orderno,
 					'amount' => $response->get('settleAmount')/100,
