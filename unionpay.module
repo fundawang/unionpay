@@ -206,8 +206,7 @@ function unionpay_submit_form_submit($form, $form_state) {
 	$param['merAbbr']               = variable_get('unionpay_merabbr', quickpay_conf::$pay_params['merAbbr']);  //商户名称
 
 	$param['transType']             = quickpay_conf::CONSUME;  //交易类型，CONSUME or PRE_AUTH
-	$param['transTimeout']		= 3600*1000;
-
+	$param['merReserved']           = sprintf('{orderTimeoutDate=%s}',date('YmdHis', $form_state['values']['ordertime']+7200));
 	$param['orderAmount']           = $form_state['values']['amount']*100;        //交易金额
 	$param['orderNumber']           = $form_state['values']['orderno']; //订单号，必须唯一
 	$param['commodityName']         = $form_state['values']['ordertitle']; //订单号，必须唯一
