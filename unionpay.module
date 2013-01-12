@@ -180,9 +180,10 @@ function unionpay_response_access() {
 			),
 			WATCHDOG_ERROR
 		);
+		return FALSE;
 	}
 	unset($response);
-	return true;
+	return TRUE;
 }
 
 function unionpay_paymentgatewayinfo() {
