@@ -210,7 +210,7 @@ function unionpay_submit_form_submit($form, $form_state) {
 	$param['merReserved']           = sprintf('{orderTimeoutDate=%s}',date('YmdHis', $form_state['values']['ordertime']+7200));
 	$param['orderAmount']           = $form_state['values']['amount']*100;        //交易金额
 	$param['orderNumber']           = $form_state['values']['orderno']; //订单号，必须唯一
-	$param['commodityName']         = $form_state['values']['ordertitle']; //订单号，必须唯一
+	$param['commodityName']         = preg_replace('/·/','',$form_state['values']['ordertitle']); //订单号，必须唯一
 	$param['orderTime']             = date('YmdHis', $form_state['values']['ordertime']);   //交易时间, YYYYmmhhddHHMMSS
 	$param['orderCurrency']         = quickpay_conf::CURRENCY_CNY;  //交易币种，CURRENCY_CNY=>人民币
 
