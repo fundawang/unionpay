@@ -41,14 +41,14 @@ class quickpay_service
                     //前台交易仅支持 消费 和 预授权
                     throw new Exception("Bad trans_type for front_pay. Use back_pay instead");
                 }
-                $this->api_url = quickpay_conf::$front_pay_url;
+                $this->api_url = quickpay_conf::$urls[variable_get('unionpay_site_status', 'test')]['front'];
                 $this->args = array_merge(quickpay_conf::$pay_params_empty,
                                         quickpay_conf::$pay_params, $args);
                 $param_check = quickpay_conf::$pay_params_check;
                 break;
 
             case quickpay_conf::BACK_PAY:
-                $this->api_url = quickpay_conf::$back_pay_url;
+                $this->api_url = quickpay_conf::$urls[variable_get('unionpay_site_status', 'test')]['back'];
                 $this->args = array_merge(quickpay_conf::$pay_params_empty,
                                         quickpay_conf::$pay_params, $args);
                 $param_check = quickpay_conf::$pay_params_check;
@@ -66,7 +66,7 @@ class quickpay_service
                 break;
 
             case quickpay_conf::QUERY:
-                $this->api_url = quickpay_conf::$query_url;
+                $this->api_url = quickpay_conf::$urls[variable_get('unionpay_site_status', 'test')]['query'];
                 $args['version']    = quickpay_conf::$pay_params['version'];
                 $args['charset']    = quickpay_conf::$pay_params['charset'];
 

@@ -28,23 +28,23 @@ class quickpay_conf
         'merAbbr'       => '商户名称',
     );
 
-    /* 测试环境
-    static $front_pay_url   = "http://58.246.226.99/UpopWeb/api/Pay.action";
-    static $back_pay_url    = "http://58.246.226.99/UpopWeb/api/BSPay.action";
-    static $query_url       = "http://58.246.226.99/UpopWeb/api/Query.action";
-    //*/
-
-    /* 预上线环境
-    static $front_pay_url   = "http://www.epay.lxdns.com/UpopWeb/api/Pay.action";
-    static $back_pay_url    = "http://www.epay.lxdns.com/UpopWeb/api/BSPay.action";
-    static $query_url       = "http://www.epay.lxdns.com/UpopWeb/api/Query.action";
-    //*/
-
-    //* 线上环境
-    static $front_pay_url   = "https://unionpaysecure.com/api/Pay.action";
-    static $back_pay_url    = "https://besvr.unionpaysecure.com/api/BSPay.action";
-    static $query_url       = "https://query.unionpaysecure.com/api/Query.action";
-    //*/
+    static $urls = array(
+        'test' => array(
+            'front' => 'http://58.246.226.99/UpopWeb/api/Pay.action',
+            'back' => 'http://58.246.226.99/UpopWeb/api/BSPay.action',
+            'query' => 'http://58.246.226.99/UpopWeb/api/Query.action',
+        ),
+        'preonline' => array(
+            'front' => 'http://www.epay.lxdns.com/UpopWeb/api/Pay.action',
+            'back' => 'http://www.epay.lxdns.com/UpopWeb/api/BSPay.action',
+            'query' => 'http://www.epay.lxdns.com//UpopWeb/api/Query.action',
+        ),
+        'online' => array(
+            'front' => 'https://unionpaysecure.com/api/Pay.action',
+            'back' => 'https://besvr.unionpaysecure.com/api/BSPay.action',
+            'query' => 'https://query.unionpaysecure.com/api/Query.action',
+        ),
+    );
     
     const FRONT_PAY = 1;
     const BACK_PAY  = 2;

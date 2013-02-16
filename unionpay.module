@@ -119,6 +119,7 @@ function unionpay_admin_form($form, $form_state) {
 
 function unionpay_admin_form_validate($form, $form_state) {
 	$orig_security_key=variable_get('unionpay_security_key', quickpay_conf::$security_key);
+	$orig_site_status=variable_get('unionpay_site_status', 'test');
 	
 	$should_return=FALSE;
 	if(preg_match('@^[0-9a-zA-Z]{6,32}$@', $form_state['values']['security_key']) !== 1) {
@@ -132,6 +133,7 @@ function unionpay_admin_form_validate($form, $form_state) {
 	if($should_return) return;
 	
 	variable_set('unionpay_security_key',$form_state['values']['security_key']);
+	variable_set('unionpay_site_status',$form_state['values']['site_status']);
 	$param=array();
 	$param['transType']     = quickpay_conf::CONSUME;   //交易类型
 	$param['orderNumber']   = date('YmdHis'); //订单号
@@ -148,6 +150,7 @@ function unionpay_admin_form_validate($form, $form_state) {
 		form_set_error('merid');
 	}
 	variable_set('unionpay_security_key',$orig_security_key);
+	variable_set('unionpay_site_status',$orig_site_status);
 }
 
 function unionpay_admin_form_submit($form, $form_state) {
