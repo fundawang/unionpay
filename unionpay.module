@@ -205,6 +205,7 @@ function unionpay_response_access() {
 function unionpay_paymentgatewayinfo() {
 	return array(
 		'unionpay' => array(
+			'name' => t('Union Pay'),
 			'url' => 'http://online.unionpay.com',
 			'front'  => drupal_get_path('module', 'unionpay').'/unionpay-merchant.png',
 			'payment' => drupal_get_path('module', 'unionpay').'/unionpay.png',
