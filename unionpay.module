@@ -99,7 +99,7 @@ function unionpay_admin_form($form, $form_state) {
 	$form['#attached']['js'][]=array('data' =>
 			'jQuery(document).ready(function(){'.
 			'jQuery(\'#edit-security-key\').after(\''.
-				'<input type="button" onclick="javascript:jQuery(\\\'#edit-security-key\\\').val(password(32));" value="'.t('Gen 32-digits random security key').'"/>'.
+				'<input type="button" class="form-submit" onclick="javascript:jQuery(\\\'#edit-security-key\\\').val(password(32));" value="'.t('Gen 32-digits random security key').'"/>'.
 				'\')'.
 			'});',
 		'type' => 'inline'
