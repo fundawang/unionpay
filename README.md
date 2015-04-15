@@ -14,7 +14,7 @@ Verify Code: Any 6-digits number</code>
 Usage
 -----
 * Setup your merchant information at admin/config/services/unionpay.
-* You may call unionpay_submit_form_submit($form, $form_state) with order information:<code>
+* You may call unionpay_submit_form_submit($form, $form_state) with order information:<code><p/>
     $form_state['values']['amount']: Order amount, in Yuan.<p/>
     $form_state['values']['orderno']: Order Number in your order processing module.<p/>
     $form_state['values']['ordertime']: Order generation time.</code>
