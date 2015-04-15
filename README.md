@@ -7,8 +7,11 @@ China Unionpay[1] Universal (5.0) interface for drupal.
 Testing card
 ------------
 Card No: 6216261000000000018
+
 ID Card No: 341126197709218366
+
 Card Holder: 全渠道
+
 Verify Code: Any 6-digits number
 
 Usage
@@ -16,8 +19,11 @@ Usage
 * Setup your merchant information at admin/config/services/unionpay.
 * You may call unionpay_submit_form_submit($form, $form_state) with order information:
     $form_state['values']['amount']: Order amount, in Yuan.
+
     $form_state['values']['orderno']: Order Number in your order processing module.
+    
     $form_state['values']['ordertime']: Order generation time.
+    
   The function will produce plain HTML code which will redirect the browser into Unionpay interface website.
   So there must be an exit() in your caller.
 
