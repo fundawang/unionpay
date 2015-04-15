@@ -18,6 +18,7 @@ Usage
 -----
 * Setup your merchant information at admin/config/services/unionpay.
 * You may call unionpay_submit_form_submit($form, $form_state) with order information:
+
     $form_state['values']['amount']: Order amount, in Yuan.
 
     $form_state['values']['orderno']: Order Number in your order processing module.
