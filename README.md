@@ -6,13 +6,10 @@ China Unionpay[1] Universal (5.0) interface for drupal.
 
 Testing card
 ------------
-Card No: 6216261000000000018
-
-ID Card No: 341126197709218366
-
-Card Holder: 全渠道
-
-Verify Code: Any 6-digits number
+<code>Card No: 6216261000000000018<p/>
+ID Card No: 341126197709218366<p/>
+Card Holder: 全渠道<p/>
+Verify Code: Any 6-digits number</code>
 
 Usage
 -----
