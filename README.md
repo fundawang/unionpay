@@ -14,19 +14,16 @@ Verify Code: Any 6-digits number</code>
 Usage
 -----
 * Setup your merchant information at admin/config/services/unionpay.
-* You may call unionpay_submit_form_submit($form, $form_state) with order information:
-
-    $form_state['values']['amount']: Order amount, in Yuan.
-
-    $form_state['values']['orderno']: Order Number in your order processing module.
-    
-    $form_state['values']['ordertime']: Order generation time.
+* You may call unionpay_submit_form_submit($form, $form_state) with order information:<code>
+    $form_state['values']['amount']: Order amount, in Yuan.<p/>
+    $form_state['values']['orderno']: Order Number in your order processing module.<p/>
+    $form_state['values']['ordertime']: Order generation time.</code>
     
   The function will produce plain HTML code which will redirect the browser into Unionpay interface website.
   So there must be an exit() in your caller.
 
 * Your module will need to implement hook_gatewayreponse(array $callback), which will be called
-  when the payment is successful and the result is given to this module. Where $callback looks like:
+  when the payment is successful and the result is given to this module. Where $callback looks like:<code>
     array(
 		'unionpay' => array(
 			'orderno' => $_POST['orderNumber'],
@@ -35,7 +32,7 @@ Usage
 			'settledate' => $_POST['settleDate'],
 			'is_backend' => arg(2)=='response_back',
 		),
-	);
+	);</code>
 
   For the meaning of qid and settleDate, pelease refer to the manual of unionpay.
   Please note that result is reliable *only* if is_backend==TRUE, where the status of the order should be
