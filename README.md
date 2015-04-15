@@ -25,7 +25,7 @@ Usage
   So there must be an exit() in your caller.
 
 * Your module will need to implement hook_gatewayreponse(array $callback), which will be called
-  when the payment is successful and the result is given to this module. Where $callback looks like:<code>
+  when the payment is successful and the result is given to this module. Where $callback looks like:<pre>
     array(
 		'unionpay' => array(
 			'orderno' => $_POST['orderNumber'],
@@ -34,7 +34,7 @@ Usage
 			'settledate' => $_POST['settleDate'],
 			'is_backend' => arg(2)=='response_back',
 		),
-	);</code>
+	);</pre>
 
   For the meaning of qid and settleDate, pelease refer to the manual of unionpay.
   Please note that result is reliable *only* if is_backend==TRUE, where the status of the order should be
