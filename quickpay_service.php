@@ -8,12 +8,8 @@
  *
  */
 
-//require_once(dirname(__FILE__) . '/quickpay_conf.php');
-include_once(DRUPAL_ROOT . '/' . drupal_get_path('module', 'unionpay') . '/quickpay_conf.php');
-
-if (function_exists("date_default_timezone_set")) {
-    date_default_timezone_set(quickpay_conf::$timezone);
-}
+include_once(DRUPAL_ROOT . '/' . drupal_get_path('module', 'unionpay') . '/lib/common.php');
+include_once(DRUPAL_ROOT . '/' . drupal_get_path('module', 'unionpay') . '/lib/SDKConfig.php');
 
 class quickpay_service
 {
