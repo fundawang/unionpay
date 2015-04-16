@@ -161,7 +161,7 @@ function unionpay_response_access() {
 		return false;
 	}
 	try {
-		$response = new unionpay_responsex(DRUPAL_ROOT . '/' . drupal_get_path('module', 'unionpay') . '/verify_sign_acp.cer', $_POST);
+		$response = new unionpay_response(DRUPAL_ROOT . '/' . drupal_get_path('module', 'unionpay') . '/verify_sign_acp.cer', $_POST);
 	} catch(Exception $exp) {
 		watchdog('unionpay',
 			'Critical error occured: @returnstr.', array(
@@ -223,7 +223,7 @@ function unionpay_response() {
 		'unionpay' => array(
 			'orderno' => $_POST['orderId'],
 			'amount' => $_POST['settleAmt']/100,
-			'transactionno' => $_POST['traceNo'],
+			'transactionno' => $_POST['queryId'],
 			'settledate' => $_POST['settleDate'],
 			'is_backend' => arg(2)=='response_back',
 		),
