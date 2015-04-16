@@ -16,4 +16,8 @@ function unionpay_requirements($phase) {
 		}
 	}
 }
+
+function unionpay_update_7500() {
+	variable_del('unionpay_merabbr');
+}
 ?>
