@@ -16,16 +16,22 @@ class unionpay {
 
 class unionpay_frontpay extends unionpay {
 	var $params;
-	protected $private_key;
 	protected $cert_id;
+	protected $private_key;
 
-	public function __construct($privatekey_file, $privatekey_passwd) {
-		$pkcs12 = file_get_contents ( $privatekey_file );
-		openssl_pkcs12_read ( $pkcs12, $certs, $privatekey_passwd );
-		$this->private_key = $certs ['pkey'];
+	public function __construct($privatekey_file=NULL, $privatekey_passwd=NULL) {
+		if(!empty($privatekey_file)) $this->private_key = variable_get('unionpay_private_key');
+		else {
+			$pkcs12 = file_get_contents ( $privatekey_file );
+			openssl_pkcs12_read ( $pkcs12, $certs, $privatekey_passwd );
+			$this->private_key = $certs ['pkey'];
+		}
 
-		$certdata = openssl_x509_parse ( $certs ['cert'] );
-		$this->cert_id = $certdata ['serialNumber'];
+		if(!empty($privatekey_passwd)) $this->cert_id = variable_get('unionpay_certid');
+		else {
+			$certdata = openssl_x509_parse ( $certs ['cert'] );
+			$this->cert_id = $certdata ['serialNumber'];
+		}
 
 		$this->params=array(
 			'version' => '5.0.0',				//版本号
@@ -39,6 +45,14 @@ class unionpay_frontpay extends unionpay {
 			'accessType' => '0',		//接入类型
 			'currencyCode' => '156',	//交易币种
 		);
+	}
+
+	public function getPrivateKey() {
+		return $this->private_key;
+	}
+
+	public function getCertId() {
+		return $this->cert_id;
 	}
 
 	private function sign() {
@@ -99,7 +113,10 @@ class unionpay_response extends unionpay {
 	var $params;
 
 	public function __construct($publickey_file, $params) {
-		$public_key = file_get_contents ( $publickey_file );	
+		if(empty($publickey_file))
+			$public_key = file_get_contents ( DRUPAL_ROOT . '/' . drupal_get_path('module', 'unionpay') . '/verify_sign_acp.cer' );
+		else
+			$public_key = $publickey_file;
 		$signature_str = $params ['signature'];
 		unset ( $params ['signature'] );
 

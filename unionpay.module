@@ -71,6 +71,7 @@ function unionpay_uninstall() {
 function unionpay_admin_form($form, $form_state) {
 	$form=array(
 		'#submit' => array('unionpay_admin_form_submit'),
+		'#validate' => array('unionpay_admin_form_validate'),
 	);
 	$form['site_status'] = array(
 		'#type' => 'select',
@@ -81,17 +82,6 @@ function unionpay_admin_form($form, $form_state) {
 		),
 		'#default_value' => variable_get('unionpay_site_status', 'test'),
 	);
-	$form['security_key'] = array(
-		'#type' => 'textfield',
-		'#title' => t('Security Key (@code)',array('@code'=>'security_key')),
-		'#default_value' => variable_get('unionpay_security_key', '00000000'),
-		'#required' => TRUE,
-		'#size' => 32,
-		'#maxlength' => 32,
-		'#attributes' => array(
-			'style' => 'font-family: monospace'
-		)
-	);
 	$form['merid'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Merchant ID (@code)',array('@code'=>'merId')),
@@ -99,52 +89,82 @@ function unionpay_admin_form($form, $form_state) {
 		'#maxlength' => 15,
 		'#required' => TRUE,
 	);
+	$form['certid'] = array(
+		'#type' => 'item',
+		'#title' => t('Private Key Certificate ID currently using'),
+		'#markup' => variable_get('unionpay_certid'),
+		'#access' => variable_get('unionpay_certid', FALSE),
+	);
+	$form['private']=array(
+		'#type' => 'fieldset',
+		'#title' => t('Key used for sign requests'),
+		'#description' => t('If you want to change current key, please reupload new private key file.'),
+		'#collapsible' => TRUE,
+		'#collapsed' => variable_get('unionpay_certid', FALSE),
+	);
+	if($form['private']['#collapsed']) unset($form['private']['#description']);
+	$form['private']['privatekey'] = array(
+		'#type' => 'managed_file',
+		'#title' => t('Merchant Private Key File (.pfx)'),
+		'#upload_validators' => array('file_validate_extensions' => array('pfx')),
+		'#required' => !$form['private']['#collapsed'],
+	);
+	$form['private']['privatepw'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Merchant Private Key password'),
+		'#required' => !$form['private']['#collapsed'],
+	);
+	$form['public']=array(
+		'#type' => 'fieldset',
+		'#title' => t('Key used for verify response'),
+		'#collapsible' => TRUE,
+		'#collapsed' => TRUE,
+	);
+	$form['public']['publickey'] = array(
+		'#type' => 'textarea',
+		'#rows' => 28,
+		'#default_value' => variable_get('unionpay_pubkey_for_unionpay',
+			file_get_contents(DRUPAL_ROOT . '/' . drupal_get_path('module', 'unionpay') . '/verify_sign_acp.cer')),
+		'#description' => t('The public key will be used to verify the signature of unionpay response. Leave blank to restore fallback settings.'),
+	);
 	return system_settings_form($form);
 }
 
-function unionpay_admin_form_validate($form, $form_state) {
-	return;
-	$orig_security_key=variable_get('unionpay_security_key', quickpay_conf::$security_key);
-	$orig_site_status=variable_get('unionpay_site_status', 'test');
-	
-	$should_return=FALSE;
-	if(preg_match('@^[0-9a-zA-Z]{6,32}$@', $form_state['values']['security_key']) !== 1) {
-		form_set_error('security_key', t('The @field you have entered is not valid.',array('@field' => t('Security Key (@code)',array('@code'=>'security_key')))));
-		$should_return=TRUE;
+function unionpay_admin_form_validate($form, &$form_state) {
+	if(!empty($form_state['values']['privatekey'])) {
+		$file=file_load($form_state['values']['privatekey']);
+		$t=new unionpay_frontpay($file->uri, $form_state['values']['privatepw']);
+		$c=$t->getCertId();
+		if(empty($c)) {
+			form_set_error('privatekey', t('The private key and password you provided do not match.'));
+			form_set_error('privatepw');
+		}
+		unset($t);
 	}
-	if(preg_match('@^[0-9]{15}$@', $form_state['values']['merid']) !== 1) {
-		form_set_error('merid', t('The @field you have entered is not valid.',array('@field' => t('Merchant ID (@code)',array('@code'=>'merId')))));
-		$should_return=TRUE;
-	}
-	if($should_return) return;
-	
-	variable_set('unionpay_security_key',$form_state['values']['security_key']);
-	variable_set('unionpay_site_status',$form_state['values']['site_status']);
-	$param=array();
-	$param['transType']     = quickpay_conf::CONSUME;   //交易类型
-	$param['orderNumber']   = date('YmdHis'); //订单号
-	$param['orderTime']     = date('YmdHis');   //订单时间
-	$param['merId']         = $form_state['values']['merid'];
-
-	//提交查询
-	$query  = new quickpay_service($param, quickpay_conf::QUERY);
-	$ret    = $query->post();
-	try {
-		$response = new quickpay_service($ret, quickpay_conf::RESPONSE);
-	} catch(Exception $exp) {
-		form_set_error('security_key', t('It seems that security key and merId does not match.'));
-		form_set_error('merid');
-	}
-	variable_set('unionpay_security_key',$orig_security_key);
-	variable_set('unionpay_site_status',$orig_site_status);
 }
 
 function unionpay_admin_form_submit($form, $form_state) {
 	$settings=array(
-		'site_status', 'security_key', 'merid'
+		'site_status', 'merid'
 	);
 	foreach($settings as $s) {
 		variable_set('unionpay_'.$s,trim($form_state['values'][$s]));
+	}
+
+	if(!empty($form_state['values']['privatekey'])) {
+		$file=file_load($form_state['values']['privatekey']);
+		$t=new unionpay_frontpay($file->uri, $form_state['values']['privatepw']);
+		file_delete($file);
+		variable_set('unionpay_privatekey',$t->getPrivateKey());
+		variable_set('unionpay_certid',$t->getCertId());
+		unset($t);
+	}
+
+	if(empty($form_state['values']['publickey'])) {
+		variable_set('unionpay_pubkey_for_unionpay',
+			file_get_contents(DRUPAL_ROOT . '/' . drupal_get_path('module', 'unionpay') . '/verify_sign_acp.cer'));
+	} else {
+		variable_set('unionpay_pubkey_for_unionpay', $form_state['values']['publickey']);
 	}
 }
 
@@ -161,7 +181,7 @@ function unionpay_response_access() {
 		return false;
 	}
 	try {
-		$response = new unionpay_response(DRUPAL_ROOT . '/' . drupal_get_path('module', 'unionpay') . '/verify_sign_acp.cer', $_POST);
+		$response = new unionpay_response(variable_get('unionpay_pubkey_for_unionpay'), $_POST);
 	} catch(Exception $exp) {
 		watchdog('unionpay',
 			'Critical error occured: @returnstr.', array(
@@ -212,7 +232,7 @@ function unionpay_submit_form_submit($form, $form_state) {
 		'payTimeout' => date('YmdHis', time()+7200),
 	);
 
-	$upop = new unionpay_frontpay(DRUPAL_ROOT . '/' . drupal_get_path('module', 'unionpay') . '/700000000000001_acp.pfx', '000000');
+	$upop = new unionpay_frontpay();
 	$upop->setParams($param);
 	
 	return (string)$upop;
