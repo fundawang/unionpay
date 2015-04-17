@@ -20,14 +20,14 @@ class unionpay_frontpay extends unionpay {
 	protected $private_key;
 
 	public function __construct($privatekey_file=NULL, $privatekey_passwd=NULL) {
-		if(!empty($privatekey_file)) $this->private_key = variable_get('unionpay_private_key');
+		if(empty($privatekey_file)) $this->private_key = variable_get('unionpay_privatekey');
 		else {
 			$pkcs12 = file_get_contents ( $privatekey_file );
 			openssl_pkcs12_read ( $pkcs12, $certs, $privatekey_passwd );
 			$this->private_key = $certs ['pkey'];
 		}
 
-		if(!empty($privatekey_passwd)) $this->cert_id = variable_get('unionpay_certid');
+		if(empty($privatekey_passwd)) $this->cert_id = variable_get('unionpay_certid');
 		else {
 			$certdata = openssl_x509_parse ( $certs ['cert'] );
 			$this->cert_id = $certdata ['serialNumber'];

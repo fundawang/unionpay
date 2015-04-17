@@ -234,7 +234,7 @@ function unionpay_submit_form_submit($form, $form_state) {
 
 	$upop = new unionpay_frontpay();
 	$upop->setParams($param);
-	
+
 	return (string)$upop;
 }
 
