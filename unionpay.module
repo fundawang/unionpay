@@ -251,50 +251,25 @@ function unionpay_response() {
 }
 
 function unionpay_querystatus($orderno, $ordertime) {
-	$param=array();
-	$param['transType']     = quickpay_conf::CONSUME;   //交易类型
-	$param['orderNumber']   = $orderno; //订单号
-	$param['orderTime']     = date('YmdHis', $ordertime);   //订单时间
-	$param['merId']         = variable_get('unionpay_merid', quickpay_conf::$pay_params['merId']);
+	$param=array(
+		'orderId' => $orderno,
+		'txnTime' => $ordertime,
+		'merId' => variable_get('unionpay_merid'),
+	);
 
-	//提交查询
-	$query  = new quickpay_service($param, quickpay_conf::QUERY);
-	$ret    = $query->post();
+	$query = new unionpay_query();
+	$query->setParams($param);
 
-	//返回查询结果
-	try {
-		$response = new quickpay_service($ret, quickpay_conf::RESPONSE);
-	} catch(Exception $exp) {
-		drupal_set_message(t('Critical error occured: @returnstr.',array('@returnstr'=>$exp->getMessage())), 'error');
-		watchdog('unionpay',
-			'Critical error occured: @returnstr.', array(
-				'@returnstr' => $exp->getMessage(),
-			),
-			WATCHDOG_CRITICAL
-		);
-		return FALSE;
-	}
-	
-	//后续处理
-	$arr_ret = $response->get_args();
+	$result=$query->execute();
 
-	$respCode = $response->get('respCode');
-	$queryResult = $response->get('queryResult');
-	
-	switch($queryResult) {
-		case quickpay_service::QUERY_FAIL:
-			return onlinecharge_PAYMENT_FAILED;
-		case quickpay_service::QUERY_INVALID:
-			return onlinecharge_PAYMENT_INVALID;
-		case quickpay_service::QUERY_WAIT:
-			return onlinecharge_PAYMENT_PROCESSING;
-		case quickpay_service::QUERY_SUCCESS:
+	switch($result->params['origRespCode']) {
+		case '00':
 			return array(
 				'unionpay' => array(
 					'orderno' => $orderno,
-					'amount' => $response->get('settleAmount')/100,
-					'transactionno' => $response->get('qid'),
-					'settledate' => $response->get('settleDate'),
+					'amount' => $result->params['settleAmt']/100,
+					'transactionno' => $result->params['queryId'],
+					'settledate' => $result->params['settleDate'],
 					'is_backend' => FALSE,
 				),
 			);
