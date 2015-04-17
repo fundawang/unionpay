@@ -61,7 +61,7 @@ function unionpay_menu() {
  */
 function unionpay_uninstall() {
 	$settings=array(
-		'site_status', 'security_key', 'merid', 'merabbr'
+		'site_status', 'security_key', 'merid', 'merabbr', 'privatekey', 'certid', 'pubkey_for_unionp'
 	);
 	foreach($settings as $s) {
 		variable_del('unionpay_'.$s);
@@ -102,7 +102,7 @@ function unionpay_admin_form($form, $form_state) {
 		'#collapsible' => TRUE,
 		'#collapsed' => variable_get('unionpay_certid', FALSE),
 	);
-	if($form['private']['#collapsed']) unset($form['private']['#description']);
+	if(!$form['private']['#collapsed']) unset($form['private']['#description']);
 	$form['private']['privatekey'] = array(
 		'#type' => 'managed_file',
 		'#title' => t('Merchant Private Key File (.pfx)'),
