@@ -210,7 +210,7 @@ function unionpay_paymentgatewayinfo() {
 	return array(
 		'unionpay' => array(
 			'name' => t('Union Pay'),
-			'url' => 'http://online.unionpay.com',
+			'url' => 'http://www.95516.com',
 			'front'  => drupal_get_path('module', 'unionpay').'/unionpay-merchant.png',
 			'payment' => drupal_get_path('module', 'unionpay').'/unionpay.png',
 		),
