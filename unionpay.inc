@@ -1,7 +1,7 @@
 <?php
 
 class unionpay {
-	public function convertParamsToString($params) {
+	protected static function convertParamsToString($params) {
 		$sign_str = array();
 		ksort ( $params );
 		foreach ( $params as $key => $val ) {
@@ -12,6 +12,21 @@ class unionpay {
 		}
 		return implode('&', $sign_str);
 	}
+
+	protected static function sign($params, $private_key) {
+		if(isset($params['transTempUrl'])){
+			unset($params['transTempUrl']);
+		}
+		$params_str = self::convertParamsToString($params);
+		$params_sha1x16 = sha1 ( $params_str, FALSE );
+		$sign_flag = openssl_sign ( $params_sha1x16, $signature, $private_key, OPENSSL_ALGO_SHA1 );
+		if ($sign_flag) {
+			$signature_base64 = base64_encode ( $signature );
+			return $signature_base64;
+		}
+		return '';
+	}
+
 }
 
 class unionpay_frontpay extends unionpay {
@@ -55,19 +70,6 @@ class unionpay_frontpay extends unionpay {
 		return $this->cert_id;
 	}
 
-	private function sign() {
-		if(isset($this->params['transTempUrl'])){
-			unset($this->params['transTempUrl']);
-		}
-		$params_str = parent::convertParamsToString($this->params);
-		$params_sha1x16 = sha1 ( $params_str, FALSE );
-		$sign_flag = openssl_sign ( $params_sha1x16, $signature, $this->private_key, OPENSSL_ALGO_SHA1 );
-		if ($sign_flag) {
-			$signature_base64 = base64_encode ( $signature );
-			$this->params ['signature'] = $signature_base64;
-		}
-	}
-
 	public function setParams($params) {
 		foreach($params as $key => $value) {
 			$this->params[$key]=$value;
@@ -75,7 +77,7 @@ class unionpay_frontpay extends unionpay {
 	}
 
 	public function __toString() {
-		if(!isset($this->params['signature'])) $this->sign();
+		if(!isset($this->params['signature'])) $this->params['signature']=parent::sign($this->params, $this->getPrivateKey());
 
 		$site_status=variable_get('unionpay_site_status', 'test');
 
@@ -123,7 +125,7 @@ class unionpay_response extends unionpay {
 		$params_str = parent::convertParamsToString ( $params );
 		$signature = base64_decode ( $signature_str );
 		$params_sha1x16 = sha1 ( $params_str, FALSE );
-		$isSuccess = openssl_verify ( $params_sha1x16, $signature,$public_key, OPENSSL_ALGO_SHA1 );
+		$isSuccess = openssl_verify ( $params_sha1x16, $signature, $public_key, OPENSSL_ALGO_SHA1 );
 		if(!$isSuccess)
 			throw new Exception('Invalid input');
 		else
@@ -163,19 +165,6 @@ class unionpay_query extends unionpay {
 		);
 	}
 
-	private function sign() {
-		if(isset($this->params['transTempUrl'])){
-			unset($this->params['transTempUrl']);
-		}
-		$params_str = parent::convertParamsToString($this->params);
-		$params_sha1x16 = sha1 ( $params_str, FALSE );
-		$sign_flag = openssl_sign ( $params_sha1x16, $signature, $this->private_key, OPENSSL_ALGO_SHA1 );
-		if ($sign_flag) {
-			$signature_base64 = base64_encode ( $signature );
-			$this->params ['signature'] = $signature_base64;
-		}
-	}
-
 	public function setParams($params) {
 		foreach($params as $key => $value) {
 			$this->params[$key]=$value;
@@ -183,7 +172,7 @@ class unionpay_query extends unionpay {
 	}
 
 	public function execute() {
-		if(!isset($this->params['signature'])) $this->sign();
+		if(!isset($this->params['signature'])) $this->params['signature']=parent::sign($this->params, $this->private_key);
 
 		$site_status=variable_get('unionpay_site_status', 'test');
 
