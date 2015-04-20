@@ -19,7 +19,7 @@ function unionpay_help($path, $arg) {
 		case 'charge/unionpay':
 			$output = '<b>'.t('FAQ on Unionpay').'</b><br/><ul>';
 			$output.= '<li>'.t('You will need to register your mobile phone number at your bank if you want to pay via your card directly.').'</li>';
-			$output.= '<li>'.t('Any questions, you may call 95516. Or, click <a href="@url" target="_blank">here</a>.',array('@url'=>'http://online.unionpay.com/static/help/index.html')).'</li>';
+			$output.= '<li>'.t('Any questions, you may call 95516. Or, click <a href="@url" target="_blank">here</a>.',array('@url'=>'https://static.95516.com/static/help/index.html')).'</li>';
 			$output.='</ul>';
 			break;
 		default: return;
