@@ -1,0 +1,121 @@
+# $Id$
+#
+# Chinese, Simplified translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  unionpay.inc: n/a
+#  unionpay.module: n/a
+#  unionpay.info: n/a
+#  unionpay.install: n/a
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2015-04-20 10:13+0800\n"
+"PO-Revision-Date: 2015-04-20 10:13+0800\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Chinese, Simplified <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+#: unionpay.inc:200 unionpay.module:186;196
+msgid "unionpay"
+msgstr "银联在线支付"
+
+#: unionpay.inc:200 unionpay.module:186
+msgid "Critical error occured: @returnstr."
+msgstr "发生了严重错误：@returnstr。"
+
+#: unionpay.module:20
+msgid "FAQ on Unionpay"
+msgstr "银联在线支付常见问题"
+
+#: unionpay.module:21
+msgid "You will need to register your mobile phone number at your bank if you want to pay via your card directly."
+msgstr "如果您想要通过银行卡直接支付，需要提前在银行柜台预留手机号码。"
+
+#: unionpay.module:22
+msgid "Any questions, you may call 95516. Or, click <a href=\"@url\" target=\"_blank\">here</a>."
+msgstr ""
+"如在支付过程中有任何问题，可拨打 95516 "
+"客服热线。或点击<a href=\"@url\" "
+"target=\"_blank\">此处</a>查看常见问题解答。如支付过程中发生验签失败，可能是银联在线支付通道拥堵或考生浏览器的问题，建议考生更换双核浏览器的极速模式，在其它时间再试。"
+
+#: unionpay.module:78
+msgid "Site status"
+msgstr "站点状态"
+
+#: unionpay.module:80
+msgid "Testing"
+msgstr "测试"
+
+#: unionpay.module:81
+msgid "Production"
+msgstr "生产环境"
+
+#: unionpay.module:87
+msgid "Merchant ID (@code)"
+msgstr "商户代码(@code)"
+
+#: unionpay.module:94
+msgid "Private Key Certificate ID currently using"
+msgstr "目前正在使用的密钥证书ID"
+
+#: unionpay.module:100
+msgid "Key used for sign requests"
+msgstr "签名请求所用的密钥"
+
+#: unionpay.module:101
+msgid "If you want to change current key, please reupload new private key file."
+msgstr "如果您想要更改当前密钥，请重新上传新的密钥文件。"
+
+#: unionpay.module:108
+msgid "Merchant Private Key File (.pfx)"
+msgstr "商户签名证书(.pfx)"
+
+#: unionpay.module:114
+msgid "Merchant Private Key password"
+msgstr "商户签名证书密码"
+
+#: unionpay.module:119
+msgid "Key used for verify response"
+msgstr "交易报文验证签名密钥"
+
+#: unionpay.module:128
+msgid "The public key will be used to verify the signature of unionpay response. Leave blank to restore fallback settings."
+msgstr "用于验证银联在线支付响应的密钥。清空可恢复默认设置。"
+
+#: unionpay.module:139
+msgid "The private key and password you provided do not match."
+msgstr "您提供的商户签名证书和密码不匹配。"
+
+#: unionpay.module:212 unionpay.info:0
+msgid "Union Pay"
+msgstr "银联在线支付"
+
+#: unionpay.module:196
+msgid "Got Error @errcode => @errstr when receiving post result."
+msgstr "接收 post 结果时发生了错误 @errcode => @errstr。"
+
+#: unionpay.module:35
+msgid "Unionpay settings"
+msgstr "银联在线支付设置"
+
+#: unionpay.module:36
+msgid "Unionpay merchant settings."
+msgstr "银联在线支付商户设置。"
+
+#: (duplicate) unionpay.install:12 
+msgid "The php function @function does not exist."
+msgstr "php 函数 @function 不存在。"
+
+#: unionpay.info:0
+msgid "Provides union pay interface for drupal"
+msgstr "提供 drupal 下的银联在线支付接口"
+
+#: unionpay.info:0
+msgid "Payment"
+msgstr "支付"
+
