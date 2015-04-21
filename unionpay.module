@@ -155,7 +155,11 @@ function unionpay_admin_form_submit($form, $form_state) {
 		$file=file_load($form_state['values']['privatekey']);
 		$t=new unionpay_frontpay($file->uri, $form_state['values']['privatepw']);
 		file_delete($file);
-		variable_set('unionpay_privatekey',$t->getPrivateKey());
+		$pkey=$t->getPrivateKey();
+		if(function_exists('openssl_encrypt')) {
+			$pkey=openssl_encrypt($pkey, 'aes-128-cbc', drupal_get_hash_salt());
+		}
+		variable_set('unionpay_privatekey',$pkey);
 		variable_set('unionpay_certid',$t->getCertId());
 		unset($t);
 	}

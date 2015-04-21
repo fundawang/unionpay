@@ -35,7 +35,13 @@ class unionpay_frontpay extends unionpay {
 	protected $private_key;
 
 	public function __construct($privatekey_file=NULL, $privatekey_passwd=NULL) {
-		if(empty($privatekey_file)) $this->private_key = variable_get('unionpay_privatekey');
+		if(empty($privatekey_file)) {
+			$pkey = variable_get('unionpay_privatekey');
+			if(function_exists('openssl_decrypt')) {
+				$pkey=openssl_decrypt($pkey, 'aes-128-cbc', drupal_get_hash_salt());
+			}
+			$this->private_key = $pkey;
+		}
 		else {
 			$pkcs12 = file_get_contents ( $privatekey_file );
 			openssl_pkcs12_read ( $pkcs12, $certs, $privatekey_passwd );
@@ -139,7 +145,13 @@ class unionpay_query extends unionpay {
 	protected $private_key;
 
 	public function __construct($privatekey_file=NULL, $privatekey_passwd=NULL) {
-		if(empty($privatekey_file)) $this->private_key = variable_get('unionpay_privatekey');
+		if(empty($privatekey_file)) {
+			$pkey = variable_get('unionpay_privatekey');
+			if(function_exists('openssl_decrypt')) {
+				$pkey=openssl_decrypt($pkey, 'aes-128-cbc', drupal_get_hash_salt());
+			}
+			$this->private_key = $pkey;
+		}
 		else {
 			$pkcs12 = file_get_contents ( $privatekey_file );
 			openssl_pkcs12_read ( $pkcs12, $certs, $privatekey_passwd );
