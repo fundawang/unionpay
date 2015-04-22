@@ -76,6 +76,7 @@ function unionpay_admin_form($form, $form_state) {
 	$form['site_status'] = array(
 		'#type' => 'select',
 		'#title' => t('Site status'),
+		'#required' => TRUE,
 		'#options' => array(
 			'test' => t('Testing'),
 			'production' => t('Production'),
@@ -214,7 +215,7 @@ function unionpay_paymentgatewayinfo() {
 	return array(
 		'unionpay' => array(
 			'name' => t('Union Pay'),
-			'url' => 'http://www.95516.com',
+			'url' => 'https://www.95516.com',
 			'front'  => drupal_get_path('module', 'unionpay').'/unionpay-merchant.png',
 			'payment' => drupal_get_path('module', 'unionpay').'/unionpay.png',
 		),
