@@ -3,5 +3,4 @@ description = Provides union pay interface for drupal
 package = Payment
 core = 7.x
 configure = admin/config/services/unionpay
-
-version = 0.1.20121204
+version = 1.0
