@@ -1,6 +1,8 @@
 name = Union Pay
 description = Provides union pay interface for drupal
 package = Payment
+type = module
 core = 7.x
+backdrop = 1.x
 configure = admin/config/services/unionpay
 version = 1.0
