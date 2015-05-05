@@ -2,6 +2,7 @@ name = Union Pay
 description = Provides union pay interface for drupal
 package = Payment
 core = 7.x
+files[] = unionpay.inc
 configure = admin/config/services/unionpay
 
 version = 5.0

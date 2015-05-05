@@ -4,8 +4,6 @@
  * This file is licensed under GPLv2+.
 */
 
-include_once(DRUPAL_ROOT . '/' . drupal_get_path('module', 'unionpay') . '/unionpay.inc');
-
 /**
  * @file
  * Provides UnionPay interface for drupal.
