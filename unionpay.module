@@ -305,4 +305,20 @@ function unionpay_querystatus($orderno, $ordertime) {
 	}
 	return FALSE;
 }
+
+/**
+ * Implementation of hook_commerce_payment_method_info().
+ */
+function unionpay_commerce_payment_method_info() {
+	$payment_methods = array(
+		'unionpay' => array(
+			'title' => t('UnionPay'), 
+			'description' => t('China UnionPay online payment'), 
+			'terminal' => FALSE, 
+			'offsite' => TRUE, 
+			'offsite_autoredirect' => TRUE,
+	));
+	return $payment_methods;
+}
+
 ?>
