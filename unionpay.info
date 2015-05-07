@@ -6,3 +6,4 @@ core = 7.x
 backdrop = 1.x
 configure = admin/config/services/unionpay
 version = 1.0
+files[] = quickpay_service.php
